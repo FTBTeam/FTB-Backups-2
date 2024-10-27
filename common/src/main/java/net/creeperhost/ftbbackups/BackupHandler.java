@@ -17,7 +17,6 @@ import net.creeperhost.levelpreview.ColourMap;
 import net.creeperhost.levelpreview.LevelPreview;
 import net.creeperhost.levelpreview.lib.CaptureArea;
 import net.creeperhost.levelpreview.lib.SimplePNG;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +24,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.LevelResource;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
@@ -103,9 +101,10 @@ public class BackupHandler {
         ColourMap colourMap = PREVIEW.getColourMap();
         CaptureHandler.init(1);
         for (ResourceLocation regName : BuiltInRegistries.BLOCK.keySet()) {
-            Block block = BuiltInRegistries.BLOCK.get(regName);
-            int colour = block.defaultMapColor().col;
-            colourMap.addBlockMapping(regName.toString(), colour);
+            BuiltInRegistries.BLOCK.get(regName).ifPresent(ref -> {
+                int colour = ref.value().defaultMapColor().col;
+                colourMap.addBlockMapping(regName.toString(), colour);
+            });
         }
     }
 
