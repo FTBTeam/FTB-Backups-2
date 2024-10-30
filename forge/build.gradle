@@ -104,7 +104,7 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = rootProject.archivesBaseName + "-forge"
+            artifactId = "${rootProject.archivesBaseName}-forge-${rootProject.minecraft_version}"
             from components.java
         }
     }
