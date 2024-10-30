@@ -101,27 +101,27 @@ components.java {
     }
 }
 
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = "${rootProject.archivesBaseName}-forge-${rootProject.minecraft_version}"
-            from components.java
-        }
-    }
+// publishing {
+//     publications {
+//         mavenFabric(MavenPublication) {
+//             artifactId = "${rootProject.archivesBaseName}-forge-${rootProject.minecraft_version}"
+//             from components.java
+//         }
+//     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        if (ENV.CREEPERHOST_MAVEN_TOKEN) {
-            maven {
-                url "https://maven.creeperhost.net/release"
-                credentials {
-                    username = "githubci"
-                    password = "${ENV.CREEPERHOST_MAVEN_TOKEN}"
-                }
-            }
-        }
-    }
-}
+//     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+//     repositories {
+//         if (ENV.CREEPERHOST_MAVEN_TOKEN) {
+//             maven {
+//                 url "https://maven.creeperhost.net/release"
+//                 credentials {
+//                     username = "githubci"
+//                     password = "${ENV.CREEPERHOST_MAVEN_TOKEN}"
+//                 }
+//             }
+//         }
+//     }
+// }
 
 unifiedPublishing {
     project {
