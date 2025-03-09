@@ -46,7 +46,9 @@ public class FileUtils {
                 Files.copy(sourcePath, destFile);
             } else {
                 try (Stream<Path> pathStream = Files.walk(sourcePath)) {
-                    for (Path path : (Iterable<Path>) pathStream::iterator) {
+                    //Can not use stream iterator because itr throws exceptions if files change while we are iterating.
+                    List<Path> paths = pathStream.toList();
+                    for (Path path : paths) {
                         if (Files.isDirectory(path)) continue;
                         Path relFile = serverRoot.relativize(path);
                         if (matchesAny(relFile, Config.cached().excluded)) continue;
@@ -75,7 +77,9 @@ public class FileUtils {
                     }
                 } else {
                     try (Stream<Path> pathStream = Files.walk(sourcePath)) {
-                        for (Path path : (Iterable<Path>) pathStream::iterator) {
+                        //Can not use stream iterator because itr throws exceptions if files change while we are iterating.
+                        List<Path> paths = pathStream.toList();
+                        for (Path path : paths) {
                             if (Files.isDirectory(path)) continue;
                             Path relFile = serverRoot.relativize(path);
                             if (matchesAny(relFile, Config.cached().excluded)) continue;
@@ -165,7 +169,9 @@ public class FileUtils {
         try {
             Hasher hasher = Hashing.sha1().newHasher();
             try (Stream<Path> pathStream = Files.walk(directory)) {
-                for (Path path : (Iterable<Path>) pathStream::iterator) {
+                //Can not use stream iterator because itr throws exceptions if files change while we are iterating.
+                List<Path> paths = pathStream.toList();
+                for (Path path : paths) {
                     if (Files.isDirectory(path)) continue;
                     HashCode hash = com.google.common.io.Files.asByteSource(path.toFile()).hash(Hashing.sha1());
                     hasher.putBytes(hash.asBytes());
@@ -212,7 +218,9 @@ public class FileUtils {
             }
 
             try (Stream<Path> pathStream = Files.walk(folder)) {
-                for (Path path : (Iterable<Path>) pathStream::iterator) {
+                //Can not use stream iterator because itr throws exceptions if files change while we are iterating.
+                List<Path> paths = pathStream.toList();
+                for (Path path : paths) {
                     if (Files.isDirectory(path) || !includeFile.test(path)) continue;
                     size += Files.size(path);
                 }
@@ -313,17 +321,17 @@ public class FileUtils {
         for (String filter : filters) {
             filter = filter.replaceAll("\\\\", "/");
 
-            boolean directory = filter.endsWith("/");
+            boolean directory = filter.endsWith("/");//false
 
             boolean sw = filter.startsWith("*");
             if (sw) filter = filter.substring(1);
 
-            boolean ew = filter.endsWith("*") || directory;
-            if (ew) filter = filter.substring(0, filter.length() - 1);
+            boolean ew = filter.endsWith("*") || directory; //true
+            if (ew) filter = filter.substring(0, filter.length() - 1); //world/data/tmp_
 
-            boolean wildCard = sw || ew;
+            boolean wildCard = sw || ew; //true
 
-            boolean path = filter.contains("/");
+            boolean path = filter.contains("/"); //true
             //Relative paths do not have a leading /
             if (filter.startsWith("/") && !sw) filter = filter.substring(1);
 

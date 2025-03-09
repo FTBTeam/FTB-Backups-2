@@ -246,7 +246,9 @@ public class BackupHandler {
                         backupPaths.add(worldFolder);
 
                         try (Stream<Path> pathStream = Files.walk(serverRoot)) {
-                            for (Path path : (Iterable<Path>) pathStream::iterator) {
+                            //Can not use stream iterator because itr throws exceptions if files change while we are iterating.
+                            List<Path> paths = pathStream.toList();
+                            for (Path path : paths) {
                                 if (Files.isDirectory(path)) continue;
                                 Path relFile = serverRoot.relativize(path);
                                 if (!FileUtils.matchesAny(relFile, Config.cached().additional_files)) continue;
