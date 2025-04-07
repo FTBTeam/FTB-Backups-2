@@ -122,7 +122,7 @@ public class MCNBTImpl implements NBTHandler {
 
         @Override
         public UUID getUUID(String name) {
-            int[] ints = tag.getIntArray(name);
+            int[] ints = tag.getIntArray(name).orElse(new int[0]);
             if (ints.length == 4) {
                 return uuidFromIntArray(ints);
             }
@@ -131,7 +131,7 @@ public class MCNBTImpl implements NBTHandler {
 
         @Override
         public boolean hasUUID(String name) {
-            int[] ints = tag.getIntArray(name);
+            int[] ints = tag.getIntArray(name).orElse(new int[0]);
             return ints.length == 4;
         }
 
@@ -172,7 +172,8 @@ public class MCNBTImpl implements NBTHandler {
 
         @Override
         public byte getTagType(String name) {
-            return tag.getTagType(name);
+            Tag t = tag.get(name);
+            return t == null ? 0 : t.getId();
         }
 
         @Override
@@ -182,77 +183,79 @@ public class MCNBTImpl implements NBTHandler {
 
         @Override
         public boolean contains(String name, int type) {
-            return tag.contains(name, type);
+            Tag t = tag.get(name);
+            return t != null && t.getId() == type;
         }
 
         @Override
         public byte getByte(String name) {
-            return tag.getByte(name);
+            return tag.getByte(name).orElse((byte)0);
         }
 
         @Override
         public short getShort(String name) {
-            return tag.getShort(name);
+            return tag.getShort(name).orElse((short)0);
         }
 
         @Override
         public int getInt(String name) {
-            return tag.getInt(name);
+            return tag.getInt(name).orElse(0);
         }
 
         @Override
         public long getLong(String name) {
-            return tag.getLong(name);
+            return tag.getLong(name).orElse(0L);
         }
 
         @Override
         public float getFloat(String name) {
-            return tag.getFloat(name);
+            return tag.getFloat(name).orElse(0F);
         }
 
         @Override
         public double getDouble(String name) {
-            return tag.getDouble(name);
+            return tag.getDouble(name).orElse(0D);
         }
 
         @NotNull
         @Override
         public String getString(String name) {
-            return tag.getString(name);
+            return tag.getString(name).orElse("");
         }
 
         @Override
         public byte[] getByteArray(String name) {
-            return tag.getByteArray(name);
+            return tag.getByteArray(name).orElseGet(() -> new byte[0]);
         }
 
         @Override
         public int[] getIntArray(String name) {
-            return tag.getIntArray(name);
+            return tag.getIntArray(name).orElseGet(() -> new int[0]);
         }
 
         @Override
         public long[] getLongArray(String name) {
-            return tag.getLongArray(name);
+            return tag.getLongArray(name).orElseGet(() -> new long[0]);
         }
 
         @NotNull
         @Override
         public ICompoundTag getCompound(String name) {
-            return new CompoundWrapper(this.tag.getCompound(name));
+            return new CompoundWrapper(this.tag.getCompoundOrEmpty(name));
         }
 
         @Override
         public IListTag getList(String name, int type) {
-            if (!tag.contains(name, Tag.TAG_LIST)) {
+            Tag t = tag.get(name);
+            if (t == null || t.getId() != TAG_LIST) {
                 return null;
             }
-            return new ListWrapper(tag.getList(name, type));
+            return new ListWrapper(tag.getListOrEmpty(name));
         }
 
         @Override
         public boolean getBoolean(String name) {
-            return tag.getBoolean(name);
+            return tag.getBoolean(name).orElse(false);
         }
 
         @Override
@@ -300,48 +303,48 @@ public class MCNBTImpl implements NBTHandler {
 
         @Override
         public ICompoundTag getCompound(int index) {
-            return new CompoundWrapper(tag.getCompound(index));
+            return new CompoundWrapper(tag.getCompoundOrEmpty(index));
         }
 
         @Nullable
         @Override
         public IListTag getList(int index) {
-            return new ListWrapper(tag.getList(index));
+            return new ListWrapper(tag.getListOrEmpty(index));
         }
 
         @Override
         public short getShort(int index) {
-            return tag.getShort(index);
+            return tag.getShort(index).orElse((short)0);
         }
 
         @Override
         public int getInt(int index) {
-            return tag.getInt(index);
+            return tag.getInt(index).orElse(0);
         }
 
         @Override
         public int[] getIntArray(int index) {
-            return tag.getIntArray(index);
+            return tag.getIntArray(index).orElseGet(() -> new int[0]);
         }
 
         @Override
         public long[] getLongArray(int index) {
-            return tag.getLongArray(index);
+            return tag.getLongArray(index).orElseGet(() -> new long[0]);
         }
 
         @Override
         public double getDouble(int index) {
-            return tag.getDouble(index);
+            return tag.getDouble(index).orElse(0D);
         }
 
         @Override
         public float getFloat(int index) {
-            return tag.getFloat(index);
+            return tag.getFloat(index).orElse(0F);
         }
 
         @Override
         public String getString(int index) {
-            return tag.getString(index);
+            return tag.getString(index).orElse("");
         }
 
         @Override
