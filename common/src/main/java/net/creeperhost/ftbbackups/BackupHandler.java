@@ -104,7 +104,10 @@ public class BackupHandler {
         CaptureHandler.init(1);
         for (ResourceLocation regName : BuiltInRegistries.BLOCK.keySet()) {
             Block block = BuiltInRegistries.BLOCK.get(regName);
-            int colour = block.defaultMapColor().col;
+            var mapColor = block.defaultMapColor();
+            //Yea, this should not be required, but I have a crash report that says otherwise....
+            if (mapColor == null) continue;
+            int colour = mapColor.col;
             colourMap.addBlockMapping(regName.toString(), colour);
         }
     }
