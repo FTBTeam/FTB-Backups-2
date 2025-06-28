@@ -22,7 +22,7 @@
 *   /backup create - Run a backup immediately.
 *   /backup snapshot - Create a backup that is protected from auto clean up
 
-*   ## Support
+## Support
 
 - For **Modpack** issues, please go here: https://go.ftb.team/support-modpack
 - For **Mod** issues, please go here: https://go.ftb.team/support-mod-issues
