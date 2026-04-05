@@ -1,0 +1,5 @@
+{
+  "ftbbackups2.backup.starting": "Iniciando backup do servidor",
+  "ftbbackups2.backup.failed": "Falha ao criar o backup",
+  "ftbbackups2.backup.finished": "Backup criado com sucesso"
+}
